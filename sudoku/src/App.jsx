@@ -126,6 +126,7 @@ function App() {
   const [solution, setSolution] = useState([]);
   const [userGrid, setUserGrid] = useState([]);
   const [status, setStatus] = useState("");
+  const [showMistakes, setShowMistakes] = useState(false);
 
   const newGame = (diff = difficulty) => {
     const solved = generateSolvedGrid();
@@ -134,6 +135,7 @@ function App() {
     setPuzzle(generatedPuzzle);
     setUserGrid(generatedPuzzle.map((row) => [...row]));
     setStatus("");
+    setShowMistakes(false);
   };
 
   useEffect(() => {
@@ -157,6 +159,8 @@ function App() {
   };
 
   const checkWin = () => {
+    setShowMistakes(true);
+
     for (let r = 0; r < SIZE; r++) {
       for (let c = 0; c < SIZE; c++) {
         if (userGrid[r][c] === 0 || userGrid[r][c] !== solution[r][c]) {
@@ -169,9 +173,10 @@ function App() {
   };
 
   const isWrongCell = (row, col) => {
+    if (!showMistakes) return false;
     const val = userGrid[row]?.[col];
     if (!val) return false;
-    return solution[row]?.[col] && val !== solution[row][col];
+    return val !== solution[row][col];
   };
 
   return (
